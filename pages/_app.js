@@ -27,6 +27,8 @@ export default function App({
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [router]);
+
+  
   return (
     <Provider store={store}>
       <Component {...pageProps} />
