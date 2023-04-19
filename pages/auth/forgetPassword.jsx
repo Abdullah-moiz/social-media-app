@@ -30,7 +30,7 @@ export default function ForgetPassword() {
     }
 
     if (formData.password !== formData.confirmPassword) {
-      toast.error("Password and Confirm Password does not match");
+      return toast.error("Password and Confirm Password does not match");
     }
 
     const res = await forget_password(formData);
