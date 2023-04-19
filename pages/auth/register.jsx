@@ -2,8 +2,10 @@ import React, { useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import Link from 'next/link';
 import { register_me } from '@/services/auth';
+import { useRouter } from 'next/router';
 
 export default function Register() {
+  const router = useRouter();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState({ email: "", password: "", name: '' });
 
