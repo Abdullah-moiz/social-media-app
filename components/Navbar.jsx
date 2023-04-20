@@ -31,13 +31,13 @@ export default function Navbar() {
                     </label>
                     <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                         <li>
-                            <a className="justify-between">
+                            <Link href={'/frontend/profile/userProfile'}  className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
-                            </a>
+                            </Link >
                         </li>
-                        <li><a>Settings</a></li>
-                        <li><a>Logout</a></li>
+                        <li><Link href={''} >Settings</Link ></li>
+                        <li><Link href={''} >Logout</Link ></li>
                     </ul>
                 </div>
             </div>
