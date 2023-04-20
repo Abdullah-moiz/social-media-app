@@ -45,26 +45,26 @@ export default function Register() {
 
           <div className="w-full bg-white rounded-lg shadow dark:border  md:mt-0 sm:max-w-md xl:p-0 ">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-              <h1 className="text-xl font-bold leading-tight tracking-tight  md:text-2xl ">
+              <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900  md:text-2xl ">
                 Register your account
               </h1>
               <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6" action="#">
                 <div className='text-left'>
-                  <label htmlFor="name" className="block mb-2 text-sm font-medium  ">Your Name</label>
+                  <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900  ">Your Name</label>
                   <input onChange={(e) => setFormData({ ...formData, name: e.target.value })} type="text" name="name" id="namw" className="bg-gray-50 border border-gray-300  sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5" placeholder="Name" required="" />
                   {
                     error.name && <p className="text-sm text-red-500">{error.name}</p>
                   }
                 </div>
                 <div className='text-left'>
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium  ">Your email</label>
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium  text-gray-900 ">Your email</label>
                   <input onChange={(e) => setFormData({ ...formData, email: e.target.value })} type="email" name="email" id="email" className="bg-gray-50 border border-gray-300  sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5" placeholder="name@company.com" required="" />
                   {
                     error.email && <p className="text-sm text-red-500">{error.email}</p>
                   }
                 </div>
                 <div className='text-left'>
-                  <label htmlFor="password" className="block mb-2 text-sm font-medium  ">Password</label>
+                  <label htmlFor="password" className="block mb-2 text-sm font-medium  text-gray-900">Password</label>
                   <input onChange={(e) => setFormData({ ...formData, password: e.target.value })} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300  sm:text-sm rounded-lg focus:ring-indigo-600 focus:border-indigo-600 block w-full p-2.5" required="" />
                   {
                     error.password && <p className="text-sm text-red-500">{error.password}</p>
@@ -72,7 +72,7 @@ export default function Register() {
                 </div>
 
                 <button type="submit" className="w-full btn btn-dark text-white  focus:ring-4 focus:outline-none focus:ring-indigo-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Sign Up</button>
-                <p className="text-sm font-light text-gray-500 ">
+                <p className="text-sm font-light text-gray-900">
                   Already have an account  <Link href="/" className="font-medium   link-hover">Sign In</Link>
                 </p>
               </form>
