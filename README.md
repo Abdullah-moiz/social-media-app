@@ -24,6 +24,9 @@
 - Post from Friends
 
 
+# Dummy Data model || class diagram
+![social_media_clone drawio](https://user-images.githubusercontent.com/90745903/233242612-e5b06578-5e3a-4fa6-836a-50cdb11321d4.png)
+
 
 
 ## Tech
