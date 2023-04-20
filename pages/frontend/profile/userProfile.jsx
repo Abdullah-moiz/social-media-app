@@ -6,19 +6,27 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { IoCreateSharp } from 'react-icons/io5'
 import { FaUserFriends } from 'react-icons/fa'
+import ProfilePage from '@/components/ProfilePage';
 import { BiHome } from 'react-icons/bi';
+import { toast , ToastContainer } from 'react-toastify';
 
 
 export default function UserProfile() {
-    const [active, setActive] = useState('posts')
-
     const router = useRouter();
+
     useEffect(() => {
-      if (!Cookies.get('token')) {
-        router.push('/')
-      }
+        if (!Cookies.get('token')) {
+            router.push('/')
+        }
     }, [])
 
+
+    const [active, setActive] = useState('posts')
+
+
+
+    
+  
 
     return (
         <div className='w-full h-screen bg-base-200 flex items-start justify-center'>
@@ -27,6 +35,7 @@ export default function UserProfile() {
                     <Image fill src='https://png.pngtree.com/thumb_back/fh260/background/20200714/pngtree-modern-double-color-futuristic-neon-background-image_351866.jpg' alt='https://png.pngtree.com/thumb_back/fh260/background/20200714/pngtree-modern-double-color-futuristic-neon-background-image_351866.jpg' />
                     <div className='absolute z-50 bottom-0 left-0 mx-auto right-0 w-32 h-32 rounded-full'>
                         <Image fill className='rounded-full ' alt='/profile.png' src='/profile.png' />
+
                     </div>
                 </div>
                 <div className="btm-nav fixed bottom-0 left-0 z-50">
@@ -53,13 +62,7 @@ export default function UserProfile() {
 
                     {
                         active === 'profile' ?
-                            <div className='w-full h-full bg-red-500 overflow-y-auto'>
-                                I am profile div
-                                <div className='w-full h-96 '></div>
-                                <div className='w-full h-96'></div>
-                                <div className='w-full h-96'></div>
-                                <div className='w-full h-96'></div>
-                            </div>
+                            <ProfilePage/>
                             : active === 'posts' ?
                                 <div className='w-full h-full  bg-blue-500 overflow-y-auto'>
                                     I am post div
@@ -80,6 +83,7 @@ export default function UserProfile() {
 
 
             </div>
+            <ToastContainer />
         </div>
     )
 }
