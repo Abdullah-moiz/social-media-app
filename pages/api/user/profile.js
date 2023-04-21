@@ -23,7 +23,9 @@ export default async (req, res) => {
     const { method } = req;
     switch (method) {
         case 'PUT':
-            await updateProfile(req , res);
+            await validateToken(req, res, async () => {
+                await updateProfile(req, res);
+            });
             break;
         default:
             res.status(400).json({ success: false, message: 'Invalid Request' });
@@ -51,7 +53,7 @@ const updateProfile = async (req, res) => {
             let backgroundImageSavedName;
 
 
-            if (profileImage.size > 0) {
+            if (profileImage?.size > 0) {
                 const oldPathProfile = profileImage.filepath;
                 const originalFileNameProfile = profileImage.originalFilename;
                 const fileExtensionProfile = path.extname(originalFileNameProfile);
@@ -72,7 +74,7 @@ const updateProfile = async (req, res) => {
                 profileImageSavedName = fileNameProfile;
             }
 
-            if (backgroundImage.size > 0) {
+            if (backgroundImage?.size > 0) {
                 const oldPathBackground = backgroundImage.filepath;
                 const originalFileNameBackground = backgroundImage.originalFilename;
                 const fileExtensionBackground = path.extname(originalFileNameBackground);
@@ -131,6 +133,3 @@ const updateProfile = async (req, res) => {
 }
 
 
-// await validateToken(req, res, async () => {
-//     await updateProfile(req, res);
-// });
