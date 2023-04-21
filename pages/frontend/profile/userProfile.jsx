@@ -9,10 +9,12 @@ import { FaUserFriends } from 'react-icons/fa'
 import ProfilePage from '@/components/ProfilePage';
 import { BiHome } from 'react-icons/bi';
 import { toast , ToastContainer } from 'react-toastify';
+import { useSelector } from 'react-redux';
 
 
 export default function UserProfile() {
     const router = useRouter();
+    const user = useSelector(state => state?.User?.userData)
 
     useEffect(() => {
         if (!Cookies.get('token')) {
@@ -29,12 +31,12 @@ export default function UserProfile() {
   
 
     return (
-        <div className='w-full h-screen bg-base-200 flex items-start justify-center'>
+        <div className='w-full h-screen bg-base-200 flex items-start justify-center overflow-hidden'>
             <div className='md:w-1/2  w-full   bg-base-200 relative'>
                 <div className='  flex items-center justify-center relative w-full h-52'>
-                    <Image fill src='https://png.pngtree.com/thumb_back/fh260/background/20200714/pngtree-modern-double-color-futuristic-neon-background-image_351866.jpg' alt='https://png.pngtree.com/thumb_back/fh260/background/20200714/pngtree-modern-double-color-futuristic-neon-background-image_351866.jpg' />
+                    <Image fill src={`/background/${user?.background}`} alt='https://png.pngtree.com/thumb_back/fh260/background/20200714/pngtree-modern-double-color-futuristic-neon-background-image_351866.jpg' />
                     <div className='absolute z-50 bottom-0 left-0 mx-auto right-0 w-32 h-32 rounded-full'>
-                        <Image fill className='rounded-full ' alt='/profile.png' src='/profile.png' />
+                        <Image fill className='rounded-full ' alt='/profile.png' src={`/profile/${user?.profile}`} />
 
                     </div>
                 </div>

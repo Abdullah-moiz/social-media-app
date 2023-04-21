@@ -3,8 +3,18 @@ import Link from 'next/link'
 import { AiFillHome } from 'react-icons/ai';
 import { IoIosCreate } from 'react-icons/io';
 import { FaUserPlus } from 'react-icons/fa';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 
 export default function Navbar() {
+    const router = useRouter();
+
+    const handleLogout = () => {
+        Cookies.remove('token');
+        localStorage.removeItem('user');
+        router.push('/')
+    }
+
     return (
         <div className={`navbar bg-base-100 fixed top-0 left-0`}>
             <div className="navbar-start">
@@ -37,7 +47,7 @@ export default function Navbar() {
                             </Link >
                         </li>
                         <li><Link href={''} >Settings</Link ></li>
-                        <li><Link href={''} >Logout</Link ></li>
+                        <li onClick={handleLogout}><Link href={''} >Logout</Link ></li>
                     </ul>
                 </div>
             </div>
