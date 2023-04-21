@@ -16,14 +16,14 @@ export const config = {
 
 
 
+
+
 export default async (req, res) => {
     await connectDB();
     const { method } = req;
     switch (method) {
         case 'PUT':
-            await validateToken(req, res, async () => {
-                await updateProfile(req, res);
-            });
+            await updateProfile(req , res);
             break;
         default:
             res.status(400).json({ success: false, message: 'Invalid Request' });
@@ -129,3 +129,8 @@ const updateProfile = async (req, res) => {
         return res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }
+
+
+// await validateToken(req, res, async () => {
+//     await updateProfile(req, res);
+// });
