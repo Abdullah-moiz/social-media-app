@@ -34,7 +34,7 @@ export default function UserProfile() {
         <div className='w-full h-screen bg-base-200 flex items-start justify-center overflow-hidden'>
             <div className='md:w-1/2  w-full   bg-base-200 relative'>
                 <div className='flex items-center justify-center relative w-full h-52'>
-                    {user?.background !== '' ? (
+                    {user?.background  ? (
                         <Image fill src={`/background/${user?.background}`} alt='Background Image' />
                     ) : (
 

@@ -101,28 +101,36 @@ const updateProfile = async (req, res) => {
 
 
             const checkProfile = await User.findById(id);
-            if (checkProfile?.profile && profileImageSavedName) {
-                const oldProfileImagePath = path.join(process.cwd(), 'public', 'profile', checkProfile.profile);
-                fs.unlink(oldProfileImagePath, (err) => {
-                    if (err) {
-                        console.error(err)
-                        return
-                    }
-                });
+
+            if(checkProfile){
+                if (checkProfile?.profile  && profileImageSavedName && checkProfile.profile !== profileImageSavedName) {
+                    const oldProfileImagePath = path.join(process.cwd(), 'public', 'profile', checkProfile.profile);
+                    fs.unlink(oldProfileImagePath, (err) => {
+                        if (err) {
+                            console.error(err)
+                            return
+                        }
+                    });
+                }
+    
+                if (checkProfile?.background && backgroundImageSavedName && checkProfile.background !== backgroundImageSavedName) {
+                    const oldBackgroundImagePath = path.join(process.cwd(), 'public', 'background', checkProfile.background);
+                    fs.unlink(oldBackgroundImagePath, (err) => {
+                        if (err) {
+                            console.error(err)
+                            return
+                        }
+                    });
+                }
+
+
+                const updateProfile = await User.findByIdAndUpdate(id, { name, bio, dob, phoneNumber, profile: profileImageSavedName, background: backgroundImageSavedName }, { new: true });
+                if (updateProfile) return res.status(200).json({ success: true, message: 'Profile Updated Successfully', data: { name: updateProfile?.name, email: updateProfile?.email, profile: updateProfile?.profile, background: updateProfile?.background, dob: updateProfile?.dob, bio: updateProfile?.bio, _id: updateProfile?._id } });
             }
 
-            if (checkProfile?.background && backgroundImageSavedName) {
-                const oldBackgroundImagePath = path.join(process.cwd(), 'public', 'background', checkProfile.background);
-                fs.unlink(oldBackgroundImagePath, (err) => {
-                    if (err) {
-                        console.error(err)
-                        return
-                    }
-                });
-            }
+          
 
-            const updateProfile = await User.findByIdAndUpdate(id, { name, bio, dob, phoneNumber, profile: profileImageSavedName, background: backgroundImageSavedName }, { new: true });
-            if (updateProfile) return res.status(200).json({ success: true, message: 'Profile Updated Successfully', data: { name: updateProfile?.name, email: updateProfile?.email, profile: updateProfile?.profile, background: updateProfile?.background, dob: updateProfile?.dob, bio: updateProfile?.bio, _id: updateProfile?._id } });
+
             return res.status(400).json({ success: false, message: 'Profile Not Updated' });
 
         })
