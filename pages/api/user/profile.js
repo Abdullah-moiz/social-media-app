@@ -45,6 +45,16 @@ const updateProfile = async (req, res) => {
             let backgroundImage = files.background;
 
 
+            const publicProfileDir = path.join(process.cwd(), 'public', 'profile');
+            const publicBackgroundDir = path.join(process.cwd(), 'public', 'background');
+
+            if (!fs.existsSync(publicProfileDir)) {
+                fs.mkdirSync(publicProfileDir, { recursive: true });
+            }
+            if (!fs.existsSync(publicBackgroundDir)) {
+                fs.mkdirSync(publicBackgroundDir, { recursive: true });
+            }
+
 
             const randomString = crypto.randomBytes(6).toString('hex');
 
@@ -58,12 +68,10 @@ const updateProfile = async (req, res) => {
                 const originalFileNameProfile = profileImage.originalFilename;
                 const fileExtensionProfile = path.extname(originalFileNameProfile);
                 const fileNameProfile = `${originalFileNameProfile.replace(fileExtensionProfile, '')}_${randomString}${fileExtensionProfile}`;
-                const newPathProfile = path.join('../../../public/profile', fileNameProfile);
+                const newPathProfile = path.join(process.cwd(), 'public', 'profile', fileNameProfile);
 
 
-                if (!fs.existsSync('../../../public/profile')){
-                    fs.mkdirSync('../../../public/profile');
-                  }
+
 
 
                 fs.readFile(oldPathProfile, function (err, data) {
@@ -84,12 +92,10 @@ const updateProfile = async (req, res) => {
                 const originalFileNameBackground = backgroundImage.originalFilename;
                 const fileExtensionBackground = path.extname(originalFileNameBackground);
                 const fileNameBackground = `${originalFileNameBackground.replace(fileExtensionBackground, '')}_${randomString}${fileExtensionBackground}`;
-                const newPathBackground = path.join('../../../public/background', fileNameBackground);
+                const newPathBackground = path.join(process.cwd(), 'public', 'background', fileNameBackground);
 
 
-                if (!fs.existsSync('../../../public/background')){
-                    fs.mkdirSync('../../../public/background');
-                  }
+
 
                 fs.readFile(oldPathBackground, function (err, data) {
                     if (err) throw err;
@@ -112,9 +118,9 @@ const updateProfile = async (req, res) => {
 
             const checkProfile = await User.findById(id);
 
-            if(checkProfile){
-                if (checkProfile?.profile  && profileImageSavedName && checkProfile.profile !== profileImageSavedName) {
-                    const oldProfileImagePath = path.join('../../../public/profile', checkProfile.profile);
+            if (checkProfile) {
+                if (checkProfile?.profile && profileImageSavedName && checkProfile.profile !== profileImageSavedName) {
+                    const oldProfileImagePath = path.join(process.cwd(), 'public', 'profile', checkProfile.profile);
                     fs.unlink(oldProfileImagePath, (err) => {
                         if (err) {
                             console.error(err)
@@ -122,9 +128,9 @@ const updateProfile = async (req, res) => {
                         }
                     });
                 }
-    
+
                 if (checkProfile?.background && backgroundImageSavedName && checkProfile.background !== backgroundImageSavedName) {
-                    const oldBackgroundImagePath = path.join('../../../public/background', checkProfile.background);
+                    const oldBackgroundImagePath = path.join(process.cwd(), 'public', 'background', checkProfile.background);
                     fs.unlink(oldBackgroundImagePath, (err) => {
                         if (err) {
                             console.error(err)
@@ -138,7 +144,7 @@ const updateProfile = async (req, res) => {
                 if (updateProfile) return res.status(200).json({ success: true, message: 'Profile Updated Successfully', data: { name: updateProfile?.name, email: updateProfile?.email, profile: updateProfile?.profile, background: updateProfile?.background, dob: updateProfile?.dob, bio: updateProfile?.bio, _id: updateProfile?._id } });
             }
 
-          
+
 
 
             return res.status(400).json({ success: false, message: 'Profile Not Updated' });
