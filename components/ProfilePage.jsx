@@ -18,7 +18,15 @@ export default function ProfilePage() {
 
 
   const uploadProfileImages = async (file) => {
-    const storageRef = ref(storage, `image/${file?.name}`);
+
+    const createFileName = () => {
+      const timestamp = Date.now();
+      const randomString = Math.random().toString(36).substring(2, 8);
+      return `${file?.name}-${timestamp}-${randomString}`;
+    }
+
+    const fileName = createFileName();
+    const storageRef = ref(storage, `image/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     return new Promise((resolve, reject) => {
@@ -48,7 +56,14 @@ export default function ProfilePage() {
 
 
   const uploadBackgroundImages = async (file) => {
-    const storageRef = ref(storage, `image/${file?.name}`);
+    const createFileName = () => {
+      const timestamp = Date.now();
+      const randomString = Math.random().toString(36).substring(2, 8);
+      return `${file?.name}-${timestamp}-${randomString}`;
+    }
+
+    const fileName = createFileName();
+    const storageRef = ref(storage, `image/${fileName}`);
     const uploadTask = uploadBytesResumable(storageRef, file);
 
     return new Promise((resolve, reject) => {
@@ -87,8 +102,7 @@ export default function ProfilePage() {
 
       if (user?.profile !== "") {
         const storageRef = ref(storage, user?.profile);
-        const fileRef = child(storageRef, user?.profile);
-        deleteObject(fileRef).catch(error => console.log(error));
+        deleteObject(storageRef).catch(error => console.log(error));
       }
       const notProf = await uploadProfileImages(profileData?.profile)
       profilePicUrl = notProf
@@ -97,8 +111,7 @@ export default function ProfilePage() {
     if (profileData?.background) {
       if (user?.background !== "") {
         const storageRef = ref(storage, user?.background);
-        const fileRef = child(storageRef, user?.background);
-        deleteObject(fileRef).catch(error => console.log(error));
+        deleteObject(storageRef).catch(error => console.log(error));
       }
 
       const notbg = await uploadBackgroundImages(profileData?.background)
@@ -152,7 +165,7 @@ export default function ProfilePage() {
   return (
     <div className='w-full py-4 bg-gray flex flex-col items-center justify-center bg-base-200 '>
       {
-        updatingProfile && <div className="progress w-full max-w-xs">
+        updatingProfile && <div className="progress z-50 w-full max-w-xs">
           <div className="progress-bar w-1/2" style={{ width: `${profileProgress}%` }}></div>
         </div>
       }
