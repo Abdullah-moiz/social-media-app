@@ -103,20 +103,14 @@ export default function ProfilePage() {
       const notProf = await uploadProfileImages(profileData?.profile)
       profilePicUrl = notProf
 
-      if (user?.profile !== "") {
-        const storageRef = ref(storage, user?.profile);
-        deleteObject(storageRef).catch(error => console.log(error));
-      }
+
 
     }
 
     if (profileData?.background) {
       const notbg = await uploadBackgroundImages(profileData?.background)
       backgroundPicUrl = notbg
-      if (user?.background !== "") {
-        const storageRef = ref(storage, user?.background);
-        deleteObject(storageRef).catch(error => console.log(error));
-      }
+
 
 
     }
