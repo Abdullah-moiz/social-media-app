@@ -14,7 +14,7 @@ export default function ProfilePage() {
   const [profileProgress, setProfileProgress] = useState(0)
   const [backgroundProgress, setBackgroundProgress] = useState(0)
   const [profileData, setProfileData] = useState({ id: user?._id, name: user?.name || "", dob: user?.dob || "", phoneNumber: user?.phoneNumber || "", bio: user?.bio || "", background: null, profile: null })
-  const [updatingProfile  , setUpdatedProfile] = useState(false)
+  const [updatingProfile, setUpdatedProfile] = useState(false)
 
 
   const uploadProfileImages = async (file) => {
@@ -87,7 +87,8 @@ export default function ProfilePage() {
 
       if (user?.profile !== "") {
         const storageRef = ref(storage, user?.profile);
-        deleteObject(storageRef).catch(error => console.log(error));
+        const fileRef = child(storageRef, user?.profile);
+        deleteObject(fileRef).catch(error => console.log(error));
       }
       const notProf = await uploadProfileImages(profileData?.profile)
       profilePicUrl = notProf
@@ -96,7 +97,8 @@ export default function ProfilePage() {
     if (profileData?.background) {
       if (user?.background !== "") {
         const storageRef = ref(storage, user?.background);
-        deleteObject(storageRef).catch(error => console.log(error));
+        const fileRef = child(storageRef, user?.background);
+        deleteObject(fileRef).catch(error => console.log(error));
       }
 
       const notbg = await uploadBackgroundImages(profileData?.background)
