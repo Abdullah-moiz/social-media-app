@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
+import { InfinitySpin } from 'react-loader-spinner';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -160,10 +161,17 @@ export default function ProfilePage() {
 
 
   return (
+
     <div className='w-full py-4 bg-gray flex flex-col items-center justify-center bg-base-200 '>
       {
-        updatingProfile && <div className="progress z-50 w-full max-w-xs">
-          <div className="progress-bar w-1/2" style={{ width: `${profileProgress}%` }}></div>
+        updatingProfile
+        &&
+        <div className='bg-gray-800/90 absolute flex-col z-50 w-full h-full top-0 left-0 flex items-center justify-center'>
+          <InfinitySpin
+            width='200'
+            color="#4fa94d"
+          />
+          <p className='text-sm my-2 text-white uppercase font-semibold'>Updating changes Hold Tight .....</p>
         </div>
       }
       <form onSubmit={handleUpdateProfile} className='w-3/4 flex flex-col items-center justify-center'>
