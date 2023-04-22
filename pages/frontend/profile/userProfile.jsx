@@ -35,7 +35,7 @@ export default function UserProfile() {
             <div className='md:w-1/2  w-full   bg-base-200 relative'>
                 <div className='flex items-center justify-center relative w-full h-52'>
                     {user?.background  ? (
-                        <Image fill src={`/background/${user?.background}`} alt='Background Image' />
+                        <Image fill src={`${user?.background}`} alt='Background Image' />
                     ) : (
 
                         <p className='text-gray-500 text-center'>Upload a background image</p>
@@ -43,7 +43,7 @@ export default function UserProfile() {
                     )}
                     <div className='absolute z-50 bottom-0 left-0 mx-auto right-0 w-32 h-32 rounded-full'>
                         {user?.profile ? (
-                            <Image fill className='rounded-full' alt='Profile Image' src={`/profile/${user?.profile}`} />
+                            <Image fill className='rounded-full' alt='Profile Image' src={`${user?.profile}`} />
                         ) : (
 
                             <p className='text-gray-500 text-center'>Upload a profile image</p>

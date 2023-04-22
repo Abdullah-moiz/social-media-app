@@ -1,37 +1,119 @@
 import { update_my_profile } from '@/services/userProfile'
+import { storage } from '@/utils/firebaseSetup';
 import { setUserData } from '@/utils/userSlice';
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
 
   const user = useSelector(state => state?.User?.userData)
   const [edit, setEdit] = useState(true)
-  const [profileData, setProfileData] = useState({id : user?._id ,  name: user?.name || "", dob: user?.dob || "", phoneNumber: user?.phoneNumber || "", bio: user?.bio || "", background: null, profile: null })
+  const [profileProgress, setProfileProgress] = useState(0)
+  const [backgroundProgress, setBackgroundProgress] = useState(0)
+  const [profileData, setProfileData] = useState({ id: user?._id, name: user?.name || "", dob: user?.dob || "", phoneNumber: user?.phoneNumber || "", bio: user?.bio || "", background: null, profile: null })
+  const [updatingProfile  , setUpdatedProfile] = useState(false)
 
+
+  const uploadProfileImages = async (file) => {
+    const storageRef = ref(storage, `image/${file?.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on('state_changed', (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setProfileProgress(progress)
+      }, (error) => {
+        console.log(error)
+        reject(error);
+      }, () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          resolve(downloadURL);
+        }).catch((error) => {
+          console.log(error)
+          reject(error);
+        });
+      });
+    });
+  }
+
+
+
+
+
+
+
+
+
+  const uploadBackgroundImages = async (file) => {
+    const storageRef = ref(storage, `image/${file?.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on('state_changed', (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setBackgroundProgress(progress)
+      }, (error) => {
+        console.log(error)
+        reject(error);
+      }, () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          resolve(downloadURL);
+        }).catch((error) => {
+          console.log(error)
+          reject(error);
+        });
+      });
+    });
+  }
 
 
   const handleUpdateProfile = async (e) => {
     e.preventDefault();
-  
-    const formData = new FormData();
-    formData.append('name', profileData?.name);
-    formData.append('id', profileData?.id);
-    formData.append('dob', profileData?.dob);
-    formData.append('phoneNumber', profileData?.phoneNumber);
-    formData.append('bio', profileData?.bio);
-    formData.append('background', profileData?.background);
-    formData.append('profile', profileData?.profile);
-    
-    const response =  await update_my_profile(formData);
-    console.log(response)
-    if(response?.success) {
+    setUpdatedProfile(true)
+
+
+    let profilePicUrl;
+    let backgroundPicUrl;
+
+
+
+
+
+
+    if (profileData?.profile) {
+
+      if (user?.profile !== "") {
+        const storageRef = ref(storage, user?.profile);
+        deleteObject(storageRef).catch(error => console.log(error));
+      }
+      const notProf = await uploadProfileImages(profileData?.profile)
+      profilePicUrl = notProf
+    }
+
+    if (profileData?.background) {
+      if (user?.background !== "") {
+        const storageRef = ref(storage, user?.background);
+        deleteObject(storageRef).catch(error => console.log(error));
+      }
+
+      const notbg = await uploadBackgroundImages(profileData?.background)
+      backgroundPicUrl = notbg
+    }
+
+
+
+    const finalData = { name: profileData?.name, id: profileData?.id, dob: profileData?.dob, phoneNumber: profileData?.phoneNumber, bio: profileData?.bio, background: backgroundPicUrl, profile: profilePicUrl }
+
+    const response = await update_my_profile(finalData);
+    if (response?.success) {
       toast.success(response?.message);
       dispatch(setUserData(response?.data));
       setEdit(state => !state);
-    }else{
+      setUpdatedProfile(false)
+    } else {
       toast.error(response?.message);
     }
   }
@@ -67,6 +149,11 @@ export default function ProfilePage() {
 
   return (
     <div className='w-full py-4 bg-gray flex flex-col items-center justify-center bg-base-200 '>
+      {
+        updatingProfile && <div className="progress w-full max-w-xs">
+          <div className="progress-bar w-1/2" style={{ width: `${profileProgress}%` }}></div>
+        </div>
+      }
       <form onSubmit={handleUpdateProfile} className='w-3/4 flex flex-col items-center justify-center'>
 
 
@@ -83,7 +170,7 @@ export default function ProfilePage() {
           <label className="label">
             <span className="label-text">Bio</span>
           </label>
-          <textarea value={profileData?.bio } onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })} disabled={edit} className="textarea" placeholder="Bio"></textarea>
+          <textarea value={profileData?.bio} onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })} disabled={edit} className="textarea" placeholder="Bio"></textarea>
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
@@ -95,25 +182,31 @@ export default function ProfilePage() {
           <label className="label">
             <span className="label-text">DOB</span>
           </label>
-          <input value={profileData?.dob } onChange={(e) => setProfileData({ ...profileData, dob: e.target.value })} disabled={edit} type="date" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+          <input value={profileData?.dob} onChange={(e) => setProfileData({ ...profileData, dob: e.target.value })} disabled={edit} type="date" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
             <span className="label-text">Phone Number</span>
           </label>
-          <input value={profileData?.phoneNumber } onChange={(e) => setProfileData({ ...profileData, phoneNumber: e.target.value })} disabled={edit} type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+          <input value={profileData?.phoneNumber} onChange={(e) => setProfileData({ ...profileData, phoneNumber: e.target.value })} disabled={edit} type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
             <span className="label-text">Change Profile</span>
           </label>
           <input accept='image/png ,  image/jpg , image/jpeg' onChange={handleProfileImage} disabled={edit} type="file" placeholder="Type here" className="file-input file-input-bordered w-full max-w-xs" />
+          {
+            profileProgress > 0 && profileProgress < 100 && <progress className="progress progress-success w-full" value={profileProgress} max="100"></progress>
+          }
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
             <span className="label-text">Change Background</span>
           </label>
-          <input  accept='image/png , image/jpg , image/jpeg' onChange={handleBackgroundImage} disabled={edit} type="file" placeholder="Type here" className="file-input file-input-bordered w-full max-w-xs" />
+          <input accept='image/png , image/jpg , image/jpeg' onChange={handleBackgroundImage} disabled={edit} type="file" placeholder="Type here" className="file-input file-input-bordered w-full max-w-xs" />
+          {
+            backgroundProgress > 0 && backgroundProgress < 100 && <progress className="progress progress-success w-full" value={backgroundProgress} max="100"></progress>
+          }
         </div>
         <div className='flex w-full items-center justify-center py-2'>
           <button type='submit' disabled={edit} className='btn btn-wide mt-4 mb-2'>Update Profile</button>
