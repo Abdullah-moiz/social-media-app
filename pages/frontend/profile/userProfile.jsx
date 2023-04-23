@@ -54,7 +54,7 @@ export default function UserProfile() {
                                 <h1 className='text-lg font-bold'>{user?.name}</h1>
                                 <p className='text-gray-500 text-xs'>2.6k Friends</p>
                             </div>
-                            <button className='btn md:m-0 mt-2 '>Add Post</button>
+                            <button onClick={() => router.push('/frontend/createPost')} className='btn md:m-0 mt-2 '>Add Post</button>
                         </div>
                     </div>
 
