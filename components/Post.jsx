@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 export default function Post() {
     const user = useSelector(state => state?.User?.userData)
     return (
-        <div className='bg-white w-full py-2 mb-2 '>
+        <div className='bg-white rounded w-full py-2 mb-2 '>
             <div className='w-full h-20 mt-2 bg-white flex items-center justify-start px-6'>
                 <div className="avatar">
                     <div className="w-10 rounded-full">

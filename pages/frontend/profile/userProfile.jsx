@@ -33,27 +33,35 @@ export default function UserProfile() {
 
     return (
         <div className='w-full h-screen bg-base-200 flex items-start justify-center overflow-hidden'>
-            <div className='md:w-1/2  w-full   bg-base-200 relative  '>
-                <div className='flex items-center justify-center relative pb-2 w-full h-52 '>
-                    {user?.background  ? (
-                        <Image fill src={`${user?.background } ` } alt='Background Image' />
+            <div className='md:w-1/2  w-full h-full   relative  '>
+                <div className='flex items-center justify-center relative pb-2 w-full h-60 '>
+                    {user?.background ? (
+                        <Image fill src={`${user?.background} `} alt='Background Image' />
                     ) : (
 
                         <p className='text-gray-500 text-center'>Upload a background image</p>
 
                     )}
-                    <div className='absolute z-50 bottom-0 left-0 mx-auto right-0 w-32 h-32 rounded-full'>
-                        {user?.profile ? (
-                            <Image fill className='rounded-full' alt='Profile Image' src={`${user?.profile || '/profile.png'}`} />
-                        ) : (
 
-                            <p className='text-gray-500 text-center'>Upload a profile image</p>
-
-                        )}
+                    <div className='w-full absolute bottom-0 left-0  md:h-20 py-2 md:py-0 mt-5 bg-white flex items-center justify-start px-6'>
+                        <div className="avatar">
+                            <div className="w-16 rounded-full">
+                                <Image alt='none' className='rounded-full' fill src={user?.profile || '/profile.png'} />
+                            </div>
+                        </div>
+                        <div className='ml-4 w-full flex md:justify-between justify-center md:flex-row flex-col   px-4 items-start'>
+                            <div>
+                                <h1 className='text-lg font-bold'>{user?.name}</h1>
+                                <p className='text-gray-500 text-xs'>2.6k Friends</p>
+                            </div>
+                            <button className='btn md:m-0 mt-2 '>Add Post</button>
+                        </div>
                     </div>
+
+
                 </div>
 
-                <div className="btm-nav z-50 fixed bottom-0 left-0 z-50">
+                <div className="btm-nav absolute bottom-0 left-0 z-50">
                     <button onClick={() => router.push('/frontend/landing')} >
                         <BiHome className="h-5 w-5 " />
                         <span className="btm-nav-label">Home</span>
@@ -80,12 +88,12 @@ export default function UserProfile() {
                             <ProfilePage />
                             : active === 'posts' ?
                                 <div className='w-full h-full py-2  overflow-y-auto'>
-                                    <Post/>
-                                    <Post/>
-                                    <Post/>
-                                    <Post/>
-                                    <Post/>
-                                    <Post/>
+                                    <Post />
+                                    <Post />
+                                    <Post />
+                                    <Post />
+                                    <Post />
+                                    <Post />
                                 </div>
                                 : <div className='w-full h-full  bg-green-500 overflow-y-auto'>
                                     I am friends div
@@ -103,3 +111,13 @@ export default function UserProfile() {
         </div>
     )
 }
+
+// <div className='absolute z-50 bottom-0 left-0 mx-auto right-0 w-32 h-32 rounded-full'>
+// {user?.profile ? (
+//     <Image fill className='rounded-full' alt='Profile Image' src={`${user?.profile || '/profile.png'}`} />
+// ) : (
+
+//     <p className='text-gray-500 text-center'>Upload a profile image</p>
+
+// )}
+// </div>

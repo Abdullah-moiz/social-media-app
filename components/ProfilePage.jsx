@@ -162,7 +162,7 @@ export default function ProfilePage() {
 
   return (
 
-    <div className='w-full py-4 bg-gray flex flex-col items-center justify-center bg-base-200 '>
+    <div className='w-full py-4 mb-2 bg-gray flex flex-col items-center justify-center bg-base-200 '>
       {
         updatingProfile
         &&
