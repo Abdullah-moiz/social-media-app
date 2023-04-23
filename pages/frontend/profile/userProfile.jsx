@@ -32,8 +32,8 @@ export default function UserProfile() {
 
 
     return (
-        <div className='w-full h-screen bg-base-200 flex items-start justify-center overflow-hidden'>
-            <div className='md:w-1/2  w-full h-full   relative  '>
+        <div className='w-full bg-base-200 flex items-start justify-center overflow-hidden '>
+            <div className='md:w-1/2 bg-base-200   w-full h-screen    relative pb-72  '>
                 <div className='flex items-center justify-center relative pb-2 w-full h-60 '>
                     {user?.background ? (
                         <Image fill src={`${user?.background} `} alt='Background Image' />
@@ -61,7 +61,7 @@ export default function UserProfile() {
 
                 </div>
 
-                <div className="btm-nav absolute bottom-0 left-0 z-50">
+                <div className="btm-nav  absolute   bottom-0 left-0 z-50">
                     <button onClick={() => router.push('/frontend/landing')} >
                         <BiHome className="h-5 w-5 " />
                         <span className="btm-nav-label">Home</span>
@@ -80,7 +80,7 @@ export default function UserProfile() {
                     </button>
                 </div>
 
-                <div className='w-full h-128   flex items-start justify-start overflow-y-auto'>
+                <div className='w-full h-full  flex items-start justify-start overflow-y-auto'>
 
 
                     {

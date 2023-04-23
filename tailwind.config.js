@@ -11,7 +11,7 @@ module.exports = {
   theme: {
     extend: {
       spacing: {
-        '128': '30rem',
+        '128': '34rem',
       }
     }
   },
