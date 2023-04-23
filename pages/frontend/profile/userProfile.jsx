@@ -53,7 +53,7 @@ export default function UserProfile() {
                     </div>
                 </div>
 
-                <div className="btm-nav fixed bottom-0 left-0 z-50">
+                <div className="btm-nav z-50 fixed bottom-0 left-0 z-50">
                     <button onClick={() => router.push('/frontend/landing')} >
                         <BiHome className="h-5 w-5 " />
                         <span className="btm-nav-label">Home</span>
