@@ -34,7 +34,7 @@ export default function UserProfile() {
     return (
         <div className='w-full h-screen bg-base-200 flex items-start justify-center overflow-hidden'>
             <div className='md:w-1/2  w-full   bg-base-200 relative  '>
-                <div className='flex items-center justify-center relative mb-4 w-full h-52 '>
+                <div className='flex items-center justify-center relative pb-2 w-full h-52 '>
                     {user?.background  ? (
                         <Image fill src={`${user?.background } ` } alt='Background Image' />
                     ) : (
@@ -79,7 +79,7 @@ export default function UserProfile() {
                         active === 'profile' ?
                             <ProfilePage />
                             : active === 'posts' ?
-                                <div className='w-full h-full py-2 pb-20 overflow-y-auto'>
+                                <div className='w-full h-full py-2  overflow-y-auto'>
                                     <Post/>
                                     <Post/>
                                     <Post/>
