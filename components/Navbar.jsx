@@ -6,6 +6,7 @@ import { FaUserPlus } from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import { useSelector } from 'react-redux';
+import Image from 'next/image';
 
 export default function Navbar() {
     const router = useRouter();
@@ -19,7 +20,7 @@ export default function Navbar() {
     }
 
     return (
-        <div className={`navbar bg-base-100 fixed top-0 left-0`}>
+        <div className={`navbar z-50 bg-base-100 fixed top-0 left-0`}>
             <div className="navbar-start">
                 <div className="dropdown">
                     <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -33,18 +34,27 @@ export default function Navbar() {
                 </div>
             </div>
             <div className="navbar-center">
-                <a className="btn btn-ghost normal-case text-xl">HalalBook</a>
+                <a className="btn btn-ghost normal-case text-xl">SocialBook</a>
             </div>
             <div className="navbar-end">
                 <div className="dropdown dropdown-end">
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
-                        <div className="w-10 rounded-full">
-                            <img   src={user?.profile} />
-                        </div>
+                        {
+                            user?.profile !== null ? <div className="w-10 rounded-full">
+                                <Image alt='none' className='rounded-full' fill src={user?.profile} />
+                            </div> :
+                                <div className="avatar placeholder">
+                                    <div className="bg-neutral-focus text-neutral-content rounded-full w-8">
+                                        <span className="text-xs">AA</span>
+                                    </div>
+                                </div>
+
+                        }
+
                     </label>
                     <ul tabIndex={0} className="mt-3 p-2 shadow menu menu-compact dropdown-content bg-base-100 rounded-box w-52">
                         <li>
-                            <Link href={'/frontend/profile/userProfile'}  className="justify-between">
+                            <Link href={'/frontend/profile/userProfile'} className="justify-between">
                                 Profile
                                 <span className="badge">New</span>
                             </Link >
