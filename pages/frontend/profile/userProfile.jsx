@@ -19,6 +19,7 @@ export default function UserProfile() {
     const router = useRouter();
     const dispatch = useDispatch();
     const user = useSelector(state => state?.User?.userData)
+    const SpecifiedPosts = useSelector(state => state?.Post?.specifiedPosts)
 
     useEffect(() => {
         if (!Cookies.get('token')) {
@@ -41,7 +42,7 @@ export default function UserProfile() {
     if (error) return toast.error('Something went wrong please try again later')
 
 
-    const SpecifiedPosts = useSelector(state => state?.Post?.specifiedPosts)
+
     
 
 
