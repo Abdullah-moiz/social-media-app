@@ -19,7 +19,11 @@ const PostSchema = new mongoose.Schema({
     postImage  : {
         type : String,
         required : true,
-    }
+    },
+    likes : {
+        type : Number,
+        default : 0
+    },
 }, { timestamps: true });
 
 const Post = mongoose.models.Post || mongoose.model("Post", PostSchema);

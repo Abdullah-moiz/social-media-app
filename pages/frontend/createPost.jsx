@@ -1,12 +1,12 @@
 import Navbar from '@/components/Navbar';
-import { submit_my_post } from '@/services/posts';
+import { submitMyPost } from '@/services/posts';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux';
 import { ToastContainer, toast } from 'react-toastify';
-import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
-import { InfinitySpin } from 'react-loader-spinner';
+import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { InfinitySpin, RotatingLines } from 'react-loader-spinner';
 import { storage } from '@/utils/firebaseSetup';
 
 
@@ -36,10 +36,10 @@ export default function CreatePost() {
     const finalData = { title, description, postImage: postImageLink, userID }
 
 
-    const res = await submit_my_post(finalData);
+    const res = await submitMyPost(finalData);
     if (res?.success) {
-      setPostingLoader(false)
       toast.success(res?.message);
+      setPostingLoader(false)
       setTimeout(() => {
         router.push('/frontend/landing')
       }, 1000);
@@ -93,27 +93,35 @@ export default function CreatePost() {
   }
 
   return (
-    <div className='w-full h-screen flex items-center justify-center flex-col'>
-      <Navbar />
+    <>
       {
         postingLoader
-        &&
-        <div className='bg-gray-800/90 absolute flex-col z-50 w-full h-full top-0 left-0 flex items-center justify-center'>
-          <InfinitySpin
-            width='200'
-            color="#4fa94d"
-          />
-          <p className='text-sm my-2 text-white uppercase font-semibold'>Updating changes Hold Tight .....</p>
-        </div>
+          ?
+          <div className='w-full h-screen flex-col bg-black/60 flex items-center justify-center '>
+            <RotatingLines
+              strokeColor="grey"
+              strokeWidth="5"
+              animationDuration="0.75"
+              width="30"
+              visible={true}
+            />
+            <h1 className='text-sm my-2 text-white font-semibold tracking-wider'>Creating Post hold Tight....</h1>
+          </div> : (
+            <>
+              <div className='w-full h-screen flex items-center justify-center flex-col'>
+                <Navbar />
+                <h1 className='text-lg font-bold tracking-widest border-b-2 border-primary mb-4 uppercase'>Create Post</h1>
+                <form onSubmit={handlePostData} className='md:w-5/12 w-full h-3/4   px-2 py-3'>
+                  <input onChange={(e) => setPostData({ ...postData, title: e.target.value })} type="text" className='w-full mb-3 border rounded px-2 font-semibold py-2 ' placeholder='Title' />
+                  <textarea onChange={(e) => setPostData({ ...postData, description: e.target.value })} className='w-full h-3/5 mb-3 border rounded px-2 font-semibold py-2 ' placeholder='Description' />
+                  <input accept='image/png ,  image/jpg , image/jpeg' onChange={handlePostImage} type="file" className="file-input mb-3  file-input-bordered w-full " />
+                  <button type='submit' className='btn w-full'>Create Post</button>
+                </form>
+                <ToastContainer />
+              </div>
+            </>
+          )
       }
-      <h1 className='text-lg font-bold tracking-widest border-b-2 border-primary mb-4 uppercase'>Create Post</h1>
-      <form onSubmit={handlePostData} className='md:w-5/12 w-full h-3/4   px-2 py-3'>
-        <input onChange={(e) => setPostData({ ...postData, title: e.target.value })} type="text" className='w-full mb-3 border rounded px-2 font-semibold py-2 ' placeholder='Title' />
-        <textarea onChange={(e) => setPostData({ ...postData, description: e.target.value })} className='w-full h-3/5 mb-3 border rounded px-2 font-semibold py-2 ' placeholder='Description' />
-        <input accept='image/png ,  image/jpg , image/jpeg' onChange={handlePostImage} type="file" className="file-input mb-3  file-input-bordered w-full " />
-        <button type='submit' className='btn w-full'>Create Post</button>
-      </form>
-      <ToastContainer />
-    </div>
+    </>
   )
 }

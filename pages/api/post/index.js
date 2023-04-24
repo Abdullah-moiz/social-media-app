@@ -30,6 +30,11 @@ export default async (req, res) => {
                 await add_post(req, res);
             });
             break;
+        case 'GET':
+            await validateToken(req, res, async () => {
+                await get_all_post(req, res);
+            });
+            break;
         default:
             res.status(400).json({ success: false, message: 'Invalid Request' });
     }
@@ -47,6 +52,17 @@ const add_post = async (req, res) => {
         if (newPost) return res.status(201).json({ success: true, message: 'Post added successfully' });
     } catch (error) {
         console.log('error in adding Post (server) => ', error);
+        res.status(500).json({ success: false, message: 'Something went wrong Please Retry !' });
+    }
+}
+
+
+const get_all_post = async (req, res) => {
+    try {
+        const posts = await Post.find({}).populate('userID', 'name  email bio profile background dob phoneNumber ');
+        if (posts) return res.status(200).json({ success: true, data: posts });
+    } catch (error) {
+        console.log('error in getting posts (server) => ', error);
         res.status(500).json({ success: false, message: 'Something went wrong Please Retry !' });
     }
 }

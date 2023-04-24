@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toast } from 'react-toastify'
 import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'firebase/storage'
-import { InfinitySpin } from 'react-loader-spinner';
+import { InfinitySpin, RotatingLines } from 'react-loader-spinner';
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
@@ -162,76 +162,84 @@ export default function ProfilePage() {
 
   return (
 
-    <div className='w-full py-4 mb-2 bg-gray flex flex-col items-center justify-center bg-base-200 '>
+    <>
       {
         updatingProfile
-        &&
-        <div className='bg-gray-800/90 absolute flex-col z-50 w-full h-full top-0 left-0 flex items-center justify-center'>
-          <InfinitySpin
-            width='200'
-            color="#4fa94d"
-          />
-          <p className='text-sm my-2 text-white uppercase font-semibold'>Updating changes Hold Tight .....</p>
-        </div>
+          ?
+
+          <div className='w-full h-screen fixed top-0 left-0 z-50  flex-col bg-black/60 flex items-center justify-center '>
+            <RotatingLines
+              strokeColor="grey"
+              strokeWidth="5"
+              animationDuration="0.75"
+              width="30"
+              visible={true}
+            />
+            <h1 className='text-sm my-2 text-white  font-semibold tracking-wider'>Updating Profile hold Tight....</h1>
+          </div> : (
+
+            <div className='w-full py-4 mb-2 bg-gray flex flex-col items-center justify-center bg-base-200 '>
+              <form onSubmit={handleUpdateProfile} className='w-3/4 flex flex-col items-center justify-center'>
+
+
+                <div className='w-full flex justify-end items-center py-2 '>
+                  <button type='button' onClick={() => setEdit(state => !state)} className='btn btn-dark'>{edit ? "Edit Profile" : "Cancel"} </button>
+                </div>
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text">Name</span>
+                  </label>
+                  <input value={profileData?.name} onChange={(e) => setProfileData({ ...profileData, name: e.target.value })} disabled={edit} type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                </div>
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text">Bio</span>
+                  </label>
+                  <textarea value={profileData?.bio} onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })} disabled={edit} className="textarea" placeholder="Bio"></textarea>
+                </div>
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text">Email</span>
+                  </label>
+                  <input value={user?.email} disabled type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                </div>
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text">DOB</span>
+                  </label>
+                  <input value={profileData?.dob} onChange={(e) => setProfileData({ ...profileData, dob: e.target.value })} disabled={edit} type="date" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                </div>
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text">Phone Number</span>
+                  </label>
+                  <input value={profileData?.phoneNumber} onChange={(e) => setProfileData({ ...profileData, phoneNumber: e.target.value })} disabled={edit} type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                </div>
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text">Change Profile</span>
+                  </label>
+                  <input accept='image/png ,  image/jpg , image/jpeg' onChange={handleProfileImage} disabled={edit} type="file" placeholder="Type here" className="file-input file-input-bordered w-full max-w-xs" />
+                  {
+                    profileProgress > 0 && profileProgress < 100 && <progress className="progress progress-success w-full" value={profileProgress} max="100"></progress>
+                  }
+                </div>
+                <div className="form-control w-full max-w-xs">
+                  <label className="label">
+                    <span className="label-text">Change Background</span>
+                  </label>
+                  <input accept='image/png , image/jpg , image/jpeg' onChange={handleBackgroundImage} disabled={edit} type="file" placeholder="Type here" className="file-input file-input-bordered w-full max-w-xs" />
+                  {
+                    backgroundProgress > 0 && backgroundProgress < 100 && <progress className="progress progress-success w-full" value={backgroundProgress} max="100"></progress>
+                  }
+                </div>
+                <div className='flex w-full items-center justify-center py-2'>
+                  <button type='submit' disabled={edit} className='btn btn-wide mt-4 mb-2'>Update Profile</button>
+                </div>
+              </form>
+            </div>
+          )
       }
-      <form onSubmit={handleUpdateProfile} className='w-3/4 flex flex-col items-center justify-center'>
-
-
-        <div className='w-full flex justify-end items-center py-2 '>
-          <button type='button' onClick={() => setEdit(state => !state)} className='btn btn-dark'>{edit ? "Edit Profile" : "Cancel"} </button>
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Name</span>
-          </label>
-          <input value={profileData?.name} onChange={(e) => setProfileData({ ...profileData, name: e.target.value })} disabled={edit} type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Bio</span>
-          </label>
-          <textarea value={profileData?.bio} onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })} disabled={edit} className="textarea" placeholder="Bio"></textarea>
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Email</span>
-          </label>
-          <input value={user?.email} disabled type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">DOB</span>
-          </label>
-          <input value={profileData?.dob} onChange={(e) => setProfileData({ ...profileData, dob: e.target.value })} disabled={edit} type="date" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Phone Number</span>
-          </label>
-          <input value={profileData?.phoneNumber} onChange={(e) => setProfileData({ ...profileData, phoneNumber: e.target.value })} disabled={edit} type="number" placeholder="Type here" className="input input-bordered w-full max-w-xs" />
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Change Profile</span>
-          </label>
-          <input accept='image/png ,  image/jpg , image/jpeg' onChange={handleProfileImage} disabled={edit} type="file" placeholder="Type here" className="file-input file-input-bordered w-full max-w-xs" />
-          {
-            profileProgress > 0 && profileProgress < 100 && <progress className="progress progress-success w-full" value={profileProgress} max="100"></progress>
-          }
-        </div>
-        <div className="form-control w-full max-w-xs">
-          <label className="label">
-            <span className="label-text">Change Background</span>
-          </label>
-          <input accept='image/png , image/jpg , image/jpeg' onChange={handleBackgroundImage} disabled={edit} type="file" placeholder="Type here" className="file-input file-input-bordered w-full max-w-xs" />
-          {
-            backgroundProgress > 0 && backgroundProgress < 100 && <progress className="progress progress-success w-full" value={backgroundProgress} max="100"></progress>
-          }
-        </div>
-        <div className='flex w-full items-center justify-center py-2'>
-          <button type='submit' disabled={edit} className='btn btn-wide mt-4 mb-2'>Update Profile</button>
-        </div>
-      </form>
-    </div>
+    </>
   )
 }
