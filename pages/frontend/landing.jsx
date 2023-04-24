@@ -13,10 +13,12 @@ import { setPostData } from '@/utils/postSlices';
 
 export default function Landing() {
 
-  const user = useSelector(state => state?.User?.userData)
+ 
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const user = useSelector(state => state?.User?.userData)
+  const AllPosts = useSelector(state => state?.Post?.posts)
 
 
   useEffect(() => {
@@ -35,7 +37,7 @@ export default function Landing() {
   if (error) return toast.error('Something went wrong please try again later')
 
 
-  const AllPosts = useSelector(state => state?.Post?.posts)
+  
 
   
 
