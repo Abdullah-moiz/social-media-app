@@ -1,20 +1,73 @@
 import Image from 'next/image'
-import React from 'react'
-import { AiOutlineLike } from 'react-icons/ai'
-import { BiComment } from 'react-icons/bi'
+import React, { useState } from 'react'
+import { AiFillDelete, AiOutlineLike } from 'react-icons/ai'
+import { BiComment, BiEditAlt } from 'react-icons/bi'
 import { formatDistanceToNow } from 'date-fns';
+import { useSelector } from 'react-redux';
+import { SlOptions } from 'react-icons/sl';
+import { deletePostOfSpecifiedUser } from '@/services/posts';
+import { ToastContainer, toast } from 'react-toastify';
+import { useSWRConfig } from "swr"
 
 export default function Post({ post }) {
-
-
+    const { mutate } = useSWRConfig();
+    const [showOption, setShowOption] = useState(false)
+    const user = useSelector(state => state.User?.userData)
     const getTimeElapsed = (dateString) => formatDistanceToNow(new Date(dateString), { addSuffix: true });
     let createDate = getTimeElapsed(post?.createdAt) || "2 hour ago";
 
 
+    const checkPost = () => {
+        if (post?.userID?._id === user?._id) {
+            return true
+        }
+        return false
+    }
+
+
+    const useOutsideClick = (callback) => {
+        const ref = React.useRef();
+
+        React.useEffect(() => {
+            const handleClick = (event) => {
+                if (ref.current && !ref.current.contains(event.target)) {
+                    callback();
+                }
+            };
+
+            document.addEventListener('click', handleClick, true);
+
+            return () => {
+                document.removeEventListener('click', handleClick, true);
+            };
+        }, [ref]);
+
+        return ref;
+    };
+
+    const handleClickOutside = () => {
+        setShowOption(false);
+    };
+    const ref = useOutsideClick(handleClickOutside);
+
+
+    const handleDeletePost = async () => {
+        let postID = post?._id  ;
+        let userID = user?._id;
+        const res  = await deletePostOfSpecifiedUser(postID, userID);
+        console.log(res)
+        if(res?.success){
+            toast.success(res?.data?.message)
+            mutate('/getAllSpecifiedUserPost')
+        }
+        else{
+            toast.error(res?.data?.message)
+        }
+    }
 
     return (
         <div className='bg-white rounded w-full py-2 mb-2 '>
-            <div className='w-full h-20 mt-2 bg-white flex items-center justify-start px-6'>
+            <div className='w-full h-20 mt-2 relative bg-white flex items-center justify-start px-6'>
                 <div className="avatar">
                     <div className="w-10 rounded-full">
                         <Image alt='none' className='rounded-full' fill src={post?.user?.profile || '/profile.png'} />
@@ -24,6 +77,19 @@ export default function Post({ post }) {
                     <h1 className='text-sm font-semibold'>{post?.userID?.name}</h1>
                     <p className='text-gray-500 text-xs '>{createDate}</p>
                 </div>
+                {
+                    checkPost() &&
+                    <>
+                        <SlOptions onClick={() => setShowOption(state => !state)} className='cursor-pointer text-lg font-semibold ' />
+                    </>
+                }
+                {
+                    showOption &&
+                    <div ref={ref} className='absolute z-50 top-12 flex items-start justify-start  py-4 px-4 flex-col right-8  rounded-xl bg-base-200'>
+                        <p className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><BiEditAlt className='mx-2 ' />  Edit Post</p>
+                        <p onClick={handleDeletePost} className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><AiFillDelete className='mx-2' /> Delete Post</p>
+                    </div>
+                }
             </div>
             <div className='py-2 px-4 '>
                 <p className='text-sm px-2'>{post?.description}</p>
@@ -47,6 +113,7 @@ export default function Post({ post }) {
                     </div>
                 </div>
             </div>
+            
         </div>
     )
 }

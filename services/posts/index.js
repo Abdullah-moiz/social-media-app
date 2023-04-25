@@ -49,3 +49,21 @@ export const getAllPostsOfSpecifiedUser = async (id) => {
         console.log('error in getting specified Post  (service) => ', error);
     }
 }
+
+
+
+
+export const deletePostOfSpecifiedUser = async (postID, userID) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/post?postID=${postID}&userID=${userID}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${Cookies.get('token')}`,
+            },
+        })
+        const data = res.json();
+        return data;
+    } catch (error) {
+        console.log('error in deleting specified Post  (service) => ', error);
+    }
+}

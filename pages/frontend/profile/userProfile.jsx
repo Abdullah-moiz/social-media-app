@@ -121,7 +121,7 @@ export default function UserProfile() {
                                 : active === 'posts' ?
                                     <div className='w-full h-full py-2  overflow-y-auto'>
                                         {
-                                            SpecifiedPosts.length > 0 ? SpecifiedPosts?.map((post) => <Post key={post?._id} post={post} />) : <p className='text-gray-500 text-center mt-4'>No Posts Found</p>
+                                            SpecifiedPosts?.length > 0 ? SpecifiedPosts?.map((post) => <Post key={post?._id} post={post} />) : <p className='text-gray-500 text-center mt-4'>No Posts Found</p>
                                         }
                                     </div>
                                     : <div className='w-full h-full  bg-green-500 overflow-y-auto'>

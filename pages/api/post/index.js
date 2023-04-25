@@ -21,6 +21,8 @@ const postValidateSchema = Joi.object({
 
 
 
+
+
 export default async (req, res) => {
     await connectDB();
     const { method } = req;
@@ -33,6 +35,11 @@ export default async (req, res) => {
         case 'GET':
             await validateToken(req, res, async () => {
                 await get_all_post(req, res);
+            });
+            break;
+        case 'DELETE':
+            await validateToken(req, res, async () => {
+                await delete_specified_post_of_user(req, res);
             });
             break;
         default:
@@ -64,5 +71,22 @@ const get_all_post = async (req, res) => {
     } catch (error) {
         console.log('error in getting posts (server) => ', error);
         res.status(500).json({ success: false, message: 'Something went wrong Please Retry !' });
+    }
+}
+
+
+const delete_specified_post_of_user = async (req, res) => {
+    try {
+        const { userID , postID } = req.query;
+
+        if(!userID || !postID) return res.status(400).json({ success: false, message: 'unAuthorized Please Login Again !' });
+
+        const checkAuthorization =  await Post.findOne({ _id : postID , userID : userID });
+        if(!checkAuthorization) return res.status(400).json({ success: false, message: 'You Are Unable To Delete Someone Else Post' });
+
+        const post = await Post.findByIdAndDelete(postID);
+        if(post) return res.status(200).json({ success: true, message : "Post Deleted Successfully" ,  });
+    } catch (error) {
+        res.status(400).json({ success: false, message: 'Error in deleting posts' });
     }
 }
