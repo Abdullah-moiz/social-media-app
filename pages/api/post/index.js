@@ -42,6 +42,11 @@ export default async (req, res) => {
                 await delete_specified_post_of_user(req, res);
             });
             break;
+        case 'PUT':
+            await validateToken(req, res, async () => {
+                await update_specified_post_of_user(req, res);
+            });
+            break;
         default:
             res.status(400).json({ success: false, message: 'Invalid Request' });
     }
@@ -88,5 +93,28 @@ const delete_specified_post_of_user = async (req, res) => {
         if(post) return res.status(200).json({ success: true, message : "Post Deleted Successfully" ,  });
     } catch (error) {
         res.status(400).json({ success: false, message: 'Error in deleting posts' });
+    }
+}
+
+
+const update_specified_post_of_user = async (req, res) => {
+    try {
+        const data = req.body;
+
+        const {  _id } = data;
+
+        
+        const post = await Post.findByIdAndUpdate(_id , data);
+        
+        if(post)
+        {
+            const  getAllNewData =  await Post.find({});
+            return res.status(200).json({ success: true, message : "Post Liked Successfully" , data: getAllNewData });
+        } 
+
+    } catch (error) {
+
+        res.status(400).json({ success: false, message: 'Error in deleting posts' });
+
     }
 }

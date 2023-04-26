@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Post from '@/components/Post';
 import useSWR from 'swr'
 import { getAllPosts } from '@/services/posts';
-import { toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 import { RotatingLines } from 'react-loader-spinner';
 import { setPostData } from '@/utils/postSlices';
 
@@ -84,6 +84,7 @@ export default function Landing() {
           {/* Main Post */}
         </div>
       </div>
+      <ToastContainer />
     </>
   )
 }

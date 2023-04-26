@@ -3,16 +3,19 @@ import React, { useState } from 'react'
 import { AiFillDelete, AiOutlineLike } from 'react-icons/ai'
 import { BiComment, BiEditAlt } from 'react-icons/bi'
 import { formatDistanceToNow } from 'date-fns';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { SlOptions } from 'react-icons/sl';
-import { deletePostOfSpecifiedUser } from '@/services/posts';
+import { deletePostOfSpecifiedUser, updatePostOfSpecifiedUser } from '@/services/posts';
 import { ToastContainer, toast } from 'react-toastify';
 import { useSWRConfig } from "swr"
+import { setPostData } from '@/utils/postSlices';
 
 export default function Post({ post }) {
     const { mutate } = useSWRConfig();
     const [showOption, setShowOption] = useState(false)
+    const dispatch = useDispatch();
     const user = useSelector(state => state.User?.userData)
+    
     const getTimeElapsed = (dateString) => formatDistanceToNow(new Date(dateString), { addSuffix: true });
     let createDate = getTimeElapsed(post?.createdAt) || "2 hour ago";
 
@@ -52,18 +55,43 @@ export default function Post({ post }) {
 
 
     const handleDeletePost = async () => {
-        let postID = post?._id  ;
+        let postID = post?._id;
         let userID = user?._id;
-        const res  = await deletePostOfSpecifiedUser(postID, userID);
+        const res = await deletePostOfSpecifiedUser(postID, userID);
         console.log(res)
-        if(res?.success){
+        if (res?.success) {
             toast.success(res?.data?.message)
             mutate('/getAllSpecifiedUserPost')
         }
-        else{
+        else {
             toast.error(res?.data?.message)
         }
     }
+
+
+    const handleLikePost = async (post) => {
+        let like = post?.likes;
+        if (typeof like !== 'number') {
+            like = 0;
+        }
+        like = like + 1;
+        
+        const { createdAt, description, _id , postImage, title, updatedAt, userID } = post;
+
+        const finalData = { _id, createdAt, description, likes: like, postImage, title, updatedAt, userID: userID?._id }
+        
+
+        const res = await updatePostOfSpecifiedUser(finalData);
+        if (res?.success) {
+            toast.success(res?.message)
+            dispatch(setPostData(res?.data))
+        } else {
+            toast.error(res?.message)
+        }
+    }
+
+
+
 
     return (
         <div className='bg-white rounded w-full py-2 mb-2 '>
@@ -103,7 +131,7 @@ export default function Post({ post }) {
                     <p className='text-gray-500 text-xs'>2 Comments</p>
                 </div>
                 <div className='flex px-4  my-1 py-2 border-y border-gray-500'>
-                    <div className='mt-1   hover:bg-gray-200  cursor-pointer transition-all duration-200 py-2 px-2 rounded flex items-center justify-center'>
+                    <div onClick={() => handleLikePost(post)} className='mt-1   hover:bg-gray-200  cursor-pointer transition-all duration-200 py-2 px-2 rounded flex items-center justify-center'>
                         <AiOutlineLike className='text-2xl mr-2' />
                         <p>Like</p>
                     </div>
@@ -113,7 +141,7 @@ export default function Post({ post }) {
                     </div>
                 </div>
             </div>
-            
+
         </div>
     )
 }
