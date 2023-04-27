@@ -32,7 +32,7 @@ export default function UserProfile() {
 
         
 
-    const { data, error, isLoading } = useSWR('getAllSpecifiedUserPost', () => getAllPostsOfSpecifiedUser(user?._id))
+    const { data, error, isLoading } = useSWR('/getAllSpecifiedUserPost', () => getAllPostsOfSpecifiedUser(user?._id))
 
 
     useEffect(() => {

@@ -9,6 +9,7 @@ import { deletePostOfSpecifiedUser, updatePostOfSpecifiedUser } from '@/services
 import { ToastContainer, toast } from 'react-toastify';
 import { useSWRConfig } from "swr"
 import { setPostData } from '@/utils/postSlices';
+import {mutate} from 'swr'
 
 export default function Post({ post }) {
     const { mutate } = useSWRConfig();
@@ -85,6 +86,7 @@ export default function Post({ post }) {
         if (res?.success) {
             toast.success(res?.message)
             dispatch(setPostData(res?.data))
+            mutate('/getAllSpecifiedUserPost')
         } else {
             toast.error(res?.message)
         }
