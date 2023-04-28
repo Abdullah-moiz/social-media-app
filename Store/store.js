@@ -7,6 +7,6 @@ import { PostReducer } from "@/utils/postSlices";
 export const store = configureStore({
   reducer: {
     User: UserReducer, // UserReducer is a function that returns a slice of state
-    Post : PostReducer,
+    Post : PostReducer, // Post Reducer is a function that returns a slice of state
   },
 })
