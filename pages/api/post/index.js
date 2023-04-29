@@ -98,18 +98,20 @@ const delete_specified_post_of_user = async (req, res) => {
 
 
 const update_specified_post_of_user = async (req, res) => {
+
     try {
         const data = req.body;
 
         const {  _id } = data;
 
-        
+        console.log(_id)
+
         const post = await Post.findByIdAndUpdate(_id , data);
         
         if(post)
         {
             const  getAllNewData =  await Post.find({});
-            return res.status(200).json({ success: true, message : "Post Liked Successfully" , data: getAllNewData });
+            return res.status(200).json({ success: true, message : "Post updated Successfully" , data: getAllNewData });
         } 
 
     } catch (error) {

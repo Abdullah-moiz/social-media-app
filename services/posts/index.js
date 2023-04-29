@@ -86,3 +86,21 @@ export const updatePostOfSpecifiedUser = async (formData) => {
         console.log('error in updating specified Post  (service) => ', error);
     }
 }
+
+
+
+export const getSinglePostDataOfSpecifiedUser = async (id) => {
+    try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/post/getSinglePostDataOfSpecifiedUser?id=${id}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${Cookies.get('token')}`,
+            },
+           
+        })
+        const data = res.json();
+        return data;
+    } catch (error) {
+        console.log('error in updating specified Post  (service) => ', error);
+    }
+}

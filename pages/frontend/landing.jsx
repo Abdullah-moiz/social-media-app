@@ -28,7 +28,7 @@ export default function Landing() {
   }, [])
 
 
-  const { data, error, isLoading } = useSWR('getAllPost', getAllPosts)
+  const { data, error, isLoading } = useSWR('/getAllPost', getAllPosts)
 
   useEffect(() => {
     if (data) dispatch(setPostData(data?.data));

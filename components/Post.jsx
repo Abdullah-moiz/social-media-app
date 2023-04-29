@@ -6,10 +6,11 @@ import { formatDistanceToNow } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { SlOptions } from 'react-icons/sl';
 import { deletePostOfSpecifiedUser, updatePostOfSpecifiedUser } from '@/services/posts';
-import { ToastContainer, toast } from 'react-toastify';
+import {  toast } from 'react-toastify';
 import { useSWRConfig } from "swr"
 import { setPostData } from '@/utils/postSlices';
 import {mutate} from 'swr'
+import Link from 'next/link';
 
 export default function Post({ post }) {
     const { mutate } = useSWRConfig();
@@ -19,7 +20,6 @@ export default function Post({ post }) {
     
     const getTimeElapsed = (dateString) => formatDistanceToNow(new Date(dateString), { addSuffix: true });
     let createDate = getTimeElapsed(post?.createdAt) || "2 hour ago";
-
 
     const checkPost = () => {
         if (post?.userID?._id === user?._id) {
@@ -84,7 +84,7 @@ export default function Post({ post }) {
 
         const res = await updatePostOfSpecifiedUser(finalData);
         if (res?.success) {
-            toast.success(res?.message)
+            toast.success('Post Liked Successfully')
             dispatch(setPostData(res?.data))
             mutate('/getAllSpecifiedUserPost')
         } else {
@@ -116,8 +116,8 @@ export default function Post({ post }) {
                 {
                     showOption &&
                     <div ref={ref} className='absolute z-50 top-12 flex items-start justify-start  py-4 px-4 flex-col right-8  rounded-xl bg-base-200'>
-                        <p className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><BiEditAlt className='mx-2 ' />  Edit Post</p>
-                        <p onClick={handleDeletePost} className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><AiFillDelete className='mx-2' /> Delete Post</p>
+                        <Link href={`/frontend/updatePost/${post?._id}`}  className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><BiEditAlt className='mx-2 ' />  Edit Post</Link>
+                        <button onClick={handleDeletePost} className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><AiFillDelete className='mx-2' /> Delete Post</button>
                     </div>
                 }
             </div>
