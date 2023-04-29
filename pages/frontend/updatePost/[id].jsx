@@ -14,6 +14,16 @@ import Image from 'next/image';
 
 
 export default function UpdatePost() {
+
+
+    const user = useSelector(state => state?.User?.userData);
+
+
+
+    const [postData, setPostData] = useState({ title: '', description: '', postImage: null, userID: user?._id })
+    const [postingLoader, setPostingLoader] = useState(false)
+
+
     const router = useRouter();
 
     useEffect(() => {
@@ -28,17 +38,14 @@ export default function UpdatePost() {
 
     const { data, error, isLoading } = useSWR('/getSinglePostOFSpecifiedUser', () => getSinglePostDataOfSpecifiedUser(id));
 
-    
+    useEffect(() => {
+        if (data) {
+            const { title, description } = data?.data;
+            setPostData({ ...postData, title, description });
+        }
+    }, [data]);
+
     if (error) return toast.error('Something went wrong please try again later')
-    
-
-    const user = useSelector(state => state?.User?.userData);
-
-    
-
-    const [postData, setPostData] = useState({ title: data?.data?.title , description: data?.data?.description , postImage: null, userID: user?._id })
-    const [postingLoader, setPostingLoader] = useState(false)
-    
 
 
 
@@ -46,7 +53,8 @@ export default function UpdatePost() {
 
 
 
-    
+
+
 
 
 
@@ -61,24 +69,24 @@ export default function UpdatePost() {
         }
         setPostingLoader(false)
 
-       
+
         const postImageLink = await uploadPOstImages(postImage);
-        let setPostImage =  postImageLink !== undefined || null  || "" ? postImageLink :  data?.data?.postImage
+        let setPostImage = postImageLink !== undefined || null || "" ? postImageLink : data?.data?.postImage
 
-        const finalData = { title, description, postImage: setPostImage , userID , _id : id  }
+        const finalData = { title, description, postImage: setPostImage, userID, _id: id }
 
 
-        const res =  await updatePostOfSpecifiedUser(finalData);
-        if(res?.success ){
+        const res = await updatePostOfSpecifiedUser(finalData);
+        if (res?.success) {
             setPostingLoader(false)
             toast.success(res?.message)
             router.push('/frontend/landing')
         }
-        else{
+        else {
             setPostingLoader(false)
             toast.error(res?.message)
         }
-        
+
     }
 
 
@@ -97,7 +105,7 @@ export default function UpdatePost() {
 
 
     const uploadPOstImages = async (file) => {
-        if(!file) return
+        if (!file) return
         const createFileName = () => {
             const timestamp = Date.now();
             const randomString = Math.random().toString(36).substring(2, 8);
@@ -140,14 +148,14 @@ export default function UpdatePost() {
                         <h1 className='text-sm my-2 text-white font-semibold tracking-wider'>Updating Post hold Tight....</h1>
                     </div> : (
                         <>
-                            <div className='w-full h-screen flex items-center justify-center flex-col'>
+                            <div className='w-full  h-full py-4 flex items-center justify-center flex-col'>
                                 <Navbar />
                                 <h1 className='text-lg font-bold tracking-widest border-b-2 border-primary mb-4 uppercase'>Update Post</h1>
                                 <form onSubmit={handlePostData} className='md:w-5/12 w-full h-3/4   px-2 py-3'>
                                     <input value={postData?.title} onChange={(e) => setPostData({ ...postData, title: e.target.value })} type="text" className='w-full mb-3 border rounded px-2 font-semibold py-2 ' placeholder='Title' />
                                     <textarea value={postData?.description} onChange={(e) => setPostData({ ...postData, description: e.target.value })} className='w-full h-3/5 mb-3 border rounded px-2 font-semibold py-2 ' placeholder='Description' />
                                     {
-                                        data?.data?.postImage && (<Image className='my-2 ' src={data?.data?.postImage} width={400} height={200} alt='NO Image FOund'  />)
+                                        data?.data?.postImage && (<Image className='my-2 ' src={data?.data?.postImage} width={400} height={200} alt='NO Image FOund' />)
                                     }
                                     <input accept='image/png ,  image/jpg , image/jpeg' onChange={handlePostImage} type="file" className="file-input mb-3  file-input-bordered w-full " />
                                     <button type='submit' className='btn w-full'>Create Post</button>
