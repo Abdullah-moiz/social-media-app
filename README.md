@@ -11,8 +11,6 @@
 
 - SignIn / SignUp
 - Forget Password
-
-## TODO
 - Create User Profile
 - Add Post
 - Delete Post
@@ -20,6 +18,8 @@
 - View Public Posts
 - like Post
 - Comment on Posts
+
+## TODO
 - Add friend
 - Post from Friends
 
@@ -69,6 +69,20 @@ Next JS ,
 Tailwind css ,
 Redux toolkit (for state management),
 MongoDB, 
+
+
+## Screenshots
+
+![image](https://user-images.githubusercontent.com/90745903/235350447-fa34e7ba-7778-44c9-9f73-cb406dba5c4b.png)
+![image](https://user-images.githubusercontent.com/90745903/235350905-c7980bfe-7e78-40c8-8da8-8f9b181fb5c9.png)
+![image](https://user-images.githubusercontent.com/90745903/235350914-977b8662-d17f-4968-a0dc-e12d33954a42.png)
+![image](https://user-images.githubusercontent.com/90745903/235350830-65aacb07-5980-4da4-b62a-684c66ebd689.png)
+![image](https://user-images.githubusercontent.com/90745903/235350840-c7ed7ba8-c386-4c1c-8801-5c53d0453432.png)
+![image](https://user-images.githubusercontent.com/90745903/235350854-2fbddad7-9c21-465b-a77b-455f46a51482.png)
+![image](https://user-images.githubusercontent.com/90745903/235350865-0dd2a448-a5af-4870-a108-8641f40023a0.png)
+![image](https://user-images.githubusercontent.com/90745903/235350877-174591ee-ab9d-4b11-bbe2-ed8defd9a6fb.png)
+
+
 
 
 
