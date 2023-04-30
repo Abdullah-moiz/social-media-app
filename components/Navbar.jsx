@@ -41,7 +41,7 @@ export default function Navbar() {
                     <label tabIndex={0} className="btn btn-ghost btn-circle avatar">
                         {
                             user?.profile !== null ? <div className="w-10 rounded-full">
-                                <Image alt='none' className='rounded-full' fill src={user?.profile} />
+                                <Image alt='none' className='rounded-full' fill src={user?.profile || '/profile.png'} />
                             </div> :
                                 <div className="avatar placeholder">
                                     <div className="bg-neutral-focus text-neutral-content rounded-full w-8">

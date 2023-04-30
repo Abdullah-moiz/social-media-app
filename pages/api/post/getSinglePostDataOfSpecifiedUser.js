@@ -31,7 +31,6 @@ export default async (req, res) => {
 }
 
 const get_single_specified_post_of_user = async (req, res) => {
-    console.log('got hit')
     try {
         const { id } = req.query;
         const post = await Post.findById(id).populate('userID', 'name profile email ');

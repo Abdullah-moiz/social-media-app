@@ -1,23 +1,25 @@
 import Image from 'next/image'
-import React, { useState } from 'react'
+import React, { useEffect, useImperativeHandle, useRef, useState } from 'react'
 import { AiFillDelete, AiOutlineLike } from 'react-icons/ai'
 import { BiComment, BiEditAlt } from 'react-icons/bi'
 import { formatDistanceToNow } from 'date-fns';
 import { useDispatch, useSelector } from 'react-redux';
 import { SlOptions } from 'react-icons/sl';
 import { deletePostOfSpecifiedUser, updatePostOfSpecifiedUser } from '@/services/posts';
-import {  toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import { useSWRConfig } from "swr"
 import { setPostData } from '@/utils/postSlices';
-import {mutate} from 'swr'
+import { mutate } from 'swr'
 import Link from 'next/link';
+import Comments from './Comments';
 
 export default function Post({ post }) {
     const { mutate } = useSWRConfig();
     const [showOption, setShowOption] = useState(false)
+    const [showCommentBox, setShowCommentBox] = useState(false)
     const dispatch = useDispatch();
     const user = useSelector(state => state.User?.userData)
-    
+
     const getTimeElapsed = (dateString) => formatDistanceToNow(new Date(dateString), { addSuffix: true });
     let createDate = getTimeElapsed(post?.createdAt) || "2 hour ago";
 
@@ -30,9 +32,9 @@ export default function Post({ post }) {
 
 
     const useOutsideClick = (callback) => {
-        const ref = React.useRef();
+        const ref = useRef();
 
-        React.useEffect(() => {
+        useEffect(() => {
             const handleClick = (event) => {
                 if (ref.current && !ref.current.contains(event.target)) {
                     callback();
@@ -59,7 +61,6 @@ export default function Post({ post }) {
         let postID = post?._id;
         let userID = user?._id;
         const res = await deletePostOfSpecifiedUser(postID, userID);
-        console.log(res)
         if (res?.success) {
             toast.success(res?.data?.message)
             mutate('/getAllSpecifiedUserPost')
@@ -76,11 +77,11 @@ export default function Post({ post }) {
             like = 0;
         }
         like = like + 1;
-        
-        const { createdAt, description, _id , postImage, title, updatedAt, userID } = post;
+
+        const { createdAt, description, _id, postImage, title, updatedAt, userID } = post;
 
         const finalData = { _id, createdAt, description, likes: like, postImage, title, updatedAt, userID: userID?._id }
-        
+
 
         const res = await updatePostOfSpecifiedUser(finalData);
         if (res?.success) {
@@ -92,11 +93,14 @@ export default function Post({ post }) {
         }
     }
 
+  
+
+
 
 
 
     return (
-        <div className='bg-white rounded w-full py-2 mb-2 '>
+        <div className='bg-white relative rounded w-full py-2 mb-2 '>
             <div className='w-full h-20 mt-2 relative bg-white flex items-center justify-start px-6'>
                 <div className="avatar">
                     <div className="w-10 rounded-full">
@@ -116,7 +120,7 @@ export default function Post({ post }) {
                 {
                     showOption &&
                     <div ref={ref} className='absolute z-50 top-12 flex items-start justify-start  py-4 px-4 flex-col right-8  rounded-xl bg-base-200'>
-                        <Link href={`/frontend/updatePost/${post?._id}`}  className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><BiEditAlt className='mx-2 ' />  Edit Post</Link>
+                        <Link href={`/frontend/updatePost/${post?._id}`} className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><BiEditAlt className='mx-2 ' />  Edit Post</Link>
                         <button onClick={handleDeletePost} className='text-sm font-semibold my-2 p-1 flex items-center justify-center cursor-pointer hover:text-indigo-600 transition-all duration-300'><AiFillDelete className='mx-2' /> Delete Post</button>
                     </div>
                 }
@@ -137,12 +141,15 @@ export default function Post({ post }) {
                         <AiOutlineLike className='text-2xl mr-2' />
                         <p>Like</p>
                     </div>
-                    <div className='mt-1 ml-6 hover:bg-gray-200  cursor-pointer transition-all duration-200 py-2 px-2 rounded flex items-center justify-center'>
+                    <div onClick={() => setShowCommentBox(true)} className='mt-1 ml-6 hover:bg-gray-200  cursor-pointer transition-all duration-200 py-2 px-2 rounded flex items-center justify-center'>
                         <BiComment className='text-2xl mr-2' />
                         <p>Comments</p>
                     </div>
                 </div>
             </div>
+            {
+                showCommentBox && <Comments postID={post?._id} setShowCommentBox={setShowCommentBox}/>
+            }
 
         </div>
     )
