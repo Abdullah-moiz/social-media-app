@@ -7,6 +7,7 @@ import { mutate } from 'swr'
 import { formatDistanceToNow } from 'date-fns';
 import useSWR from 'swr'
 import Image from 'next/image';
+import { RotatingLines } from 'react-loader-spinner';
 
 export default function Comments({ postID, setShowCommentBox }) {
 
@@ -94,7 +95,7 @@ export default function Comments({ postID, setShowCommentBox }) {
                             {
                                 data?.data?.map((comment) => {
                                     return (
-                                        <div className="chat chat-start">
+                                        <div key={comment?._id} className="chat chat-start">
                                             <div className="chat-image avatar">
                                                 <div className="w-10 relative rounded-full">
                                                     <Image fill alt='no Image' src={comment?.userID?.profile || "/profile.png"} />
