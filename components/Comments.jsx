@@ -77,7 +77,7 @@ export default function Comments({ postID, setShowCommentBox }) {
         <>
             {
                 isLoading ? (
-                    <div className='w-full h-screen flex-col bg-black flex items-center justify-center '>
+                    <div className=' absolute bottom-0 left-0 z-30 w-full h-full flex-col min-h-fit bg-black flex items-center justify-center '>
                         <RotatingLines
                             strokeColor="grey"
                             strokeWidth="5"
@@ -85,7 +85,7 @@ export default function Comments({ postID, setShowCommentBox }) {
                             width="30"
                             visible={true}
                         />
-                        <h1 className='text-sm my-2 text-white font-semibold tracking-wider'>Loading Resources hold Tight....</h1>
+                        <h1 className='text-sm my-2 text-white font-semibold tracking-wider'>Loading Comments hold Tight....</h1>
                     </div>
                 ) : (
                     <div ref={commentRef} className='absolute bottom-0 left-0 z-30 w-full px-4 h-full border-2 min-h-fit  bg-white '>
@@ -119,7 +119,7 @@ export default function Comments({ postID, setShowCommentBox }) {
 
                             {/* map over it for comments */}
 
-                        <div className='flex w-full  md:px-3 md:py-2'>
+                        <div className='flex w-full py-4 md:px-3 md:py-2'>
                             <input value={comment} onChange={(e) => setComment(e.target.value)} type="text" placeholder="Type Your Comment" className="input input-bordered  w-full " />
                             <button onClick={handleSubmitComment} className='btn mx-2 '>Comment</button>
                         </div>
