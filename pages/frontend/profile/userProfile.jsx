@@ -14,6 +14,8 @@ import useSWR from 'swr'
 import { getAllPostsOfSpecifiedUser } from '@/services/posts';
 import { setSpecifiedPostData } from '@/utils/postSlices';
 import { RotatingLines } from 'react-loader-spinner';
+import Friends from '@/components/Friends';
+import { getListOfAllUser } from '@/services/friends';
 
 export default function UserProfile() {
     const router = useRouter();
@@ -30,27 +32,30 @@ export default function UserProfile() {
 
     const [active, setActive] = useState('posts')
 
-        
 
-    const { data, error, isLoading } = useSWR('/getAllSpecifiedUserPost', () => getAllPostsOfSpecifiedUser(user?._id))
+
+    const { data : postData , error : postError, isLoading : postLoading } = useSWR('/getAllSpecifiedUserPost', () => getAllPostsOfSpecifiedUser(user?._id))
+    const { data : friendData , error : friendError, isLoading : firendLoading } = useSWR('/getAllUsersDataAsFirend', getListOfAllUser)
 
 
     useEffect(() => {
-        if (data) dispatch(setSpecifiedPostData(data?.data));
-    }, [dispatch, data])
+        if (postData) dispatch(setSpecifiedPostData(postData?.data));
+    }, [dispatch, postData])
 
-    if (error) return toast.error('Something went wrong please try again later')
+    if (postError) return toast.error('Something went wrong please try again later')
+    if (friendError) return toast.error('Something went wrong please try again later')
 
 
 
-    
+    const allUser = friendData?.data?.filter((thisUser) => thisUser?._id !== user?._id);
+
 
 
 
     return (
         <>
             {
-                isLoading && (
+                postLoading || firendLoading && (
                     <div className='w-full h-screen flex-col bg-black flex items-center justify-center '>
                         <RotatingLines
                             strokeColor="grey"
@@ -124,12 +129,11 @@ export default function UserProfile() {
                                             SpecifiedPosts?.length > 0 ? SpecifiedPosts?.map((post) => <Post key={post?._id} post={post} />) : <p className='text-gray-500 text-center mt-4'>No Posts Found</p>
                                         }
                                     </div>
-                                    : <div className='w-full h-full  bg-green-500 overflow-y-auto'>
-                                        I am friends div
-                                        <div className='w-full h-96'></div>
-                                        <div className='w-full h-96'></div>
-                                        <div className='w-full h-96'></div>
-                                        <div className='w-full h-96'></div>
+                                    : <div className='w-full h-full py-2 overflow-y-auto'>
+                                        {
+                                            allUser?.length > 0 ? allUser?.map((friend) => <Friends key={friend?._id} friendData={friend} />) : <p className='text-gray-500 text-center mt-4'>No Posts Found</p>
+                                        }
+                                        
                                     </div>
                         }
                     </div>
