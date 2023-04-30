@@ -88,8 +88,8 @@ export default function Comments({ postID, setShowCommentBox }) {
                         <h1 className='text-sm my-2 text-white font-semibold tracking-wider'>Loading Resources hold Tight....</h1>
                     </div>
                 ) : (
-                    <div ref={commentRef} className='absolute bottom-0 left-0 z-30 w-full px-4 h-96  bg-white '>
-                        <div className='w-full py-3 h-full overflow-auto  '>
+                    <div ref={commentRef} className='absolute bottom-0 left-0 z-30 w-full px-4 h-full border-2 min-h-fit  bg-white '>
+                        <div className='w-full relative py-3 h-full overflow-auto  '>
                             {/* map over it for comments */}
                             {
                                 data?.data?.map((comment) => {
@@ -119,10 +119,10 @@ export default function Comments({ postID, setShowCommentBox }) {
 
                             {/* map over it for comments */}
 
-                        </div>
-                        <div className='flex relative  bottom-0 w-full left-0 px-3 py-2'>
+                        <div className='flex w-full  md:px-3 md:py-2'>
                             <input value={comment} onChange={(e) => setComment(e.target.value)} type="text" placeholder="Type Your Comment" className="input input-bordered  w-full " />
                             <button onClick={handleSubmitComment} className='btn mx-2 '>Comment</button>
+                        </div>
                         </div>
                     </div>
                 )

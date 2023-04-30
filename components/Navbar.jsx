@@ -28,7 +28,7 @@ export default function Navbar() {
                     </label>
                     <ul tabIndex={0} className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52">
                         <li><Link href={'/frontend/landing'}><AiFillHome className="mx-2" /> Home</Link></li>
-                        <li><Link href={'/frontend/landing'}> <IoIosCreate className="mx-2" />Create Post</Link></li>
+                        <li><Link href={'/frontend/createPost'}> <IoIosCreate className="mx-2" />Create Post</Link></li>
                         <li><Link href={'/frontend/landing'}><FaUserPlus className="mx-2" />Friend Requests</Link></li>
                     </ul>
                 </div>
@@ -56,10 +56,8 @@ export default function Navbar() {
                         <li>
                             <Link href={'/frontend/profile/userProfile'} className="justify-between">
                                 Profile
-                                <span className="badge">New</span>
                             </Link >
                         </li>
-                        <li><Link href={''} >Settings</Link ></li>
                         <li onClick={handleLogout}><Link href={''} >Logout</Link ></li>
                     </ul>
                 </div>
