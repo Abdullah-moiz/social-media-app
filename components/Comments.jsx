@@ -12,7 +12,6 @@ import { RotatingLines } from 'react-loader-spinner';
 export default function Comments({ postID, setShowCommentBox }) {
 
     const user = useSelector(state => state?.User?.userData)
-    console.log(user?._id)
     const [comment, setComment] = useState('');
 
 
